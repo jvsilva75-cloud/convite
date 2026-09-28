@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<!-- skill:chrome -->
+<style>
+/* Credit line — bottom-right */
+.design-ui-credit {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font: 11px/1 system-ui, sans-serif;
+  color: rgba(128,128,128,0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  transition: opacity 0.4s ease;
+  user-select: none;
+  letter-spacing: 0.02em;
+}
+
+/* Hide chrome on touch devices */
+@media (hover: none) {
+  .design-ui-credit { display: none; }
+}
+
+/* Print fixes */
+@media print {
+  * {
+    transition: none !important;
+    animation: none !important;
+    box-shadow: none !important;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .design-ui-credit { display: none !important; }
+}
+
+</style>
+<script>
+(function () {
+    // Design-ui pages are single compositions, so the whole body is editable.
+    function markEditable() {
+        document.body.classList.add('artifact-editable');
+    }
+
+    // Credit badge with idle-fade. Hover devices only.
+    function initChromeUI() {
+        if (!matchMedia('(hover: hover)').matches) return;
+
+        var credit = document.createElement('div');
+        credit.className = 'design-ui-credit';
+        credit.setAttribute('aria-hidden', 'true');
+        credit.innerHTML = '\u{1F49C} by João Victor';
+        document.body.appendChild(credit);
+
+        var timer = null;
+        var fade = function (out) { credit.style.opacity = out ? '0' : ''; };
+        fade(true);
+        var show = function () {
+            fade(false);
+            clearTimeout(timer);
+            timer = setTimeout(function () { fade(true); }, 3000);
+        };
+        document.addEventListener('mousemove', show);
+        show();
+    }
+
+    function init() {
+        markEditable();
+        initChromeUI();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
+
+</script>
+<!-- /skill:chrome -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tenho uma pergunta importante</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sun: oklch(88% 0.17 95);
+    --sun-deep: oklch(80% 0.17 88);
+    --ink: oklch(24% 0.05 40);
+    --ink-soft: oklch(40% 0.06 45);
+    --tomato: oklch(62% 0.21 32);
+    --tomato-press: oklch(55% 0.2 32);
+    --paper: oklch(98% 0.02 95);
+    --line: oklch(30% 0.05 40);
+    --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{
+    font-family:"Bricolage Grotesque", system-ui, sans-serif;
+    font-optical-sizing:auto;
+    background:var(--sun);
+    color:var(--ink);
+    overflow:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  /* dotted texture */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background-image:radial-gradient(var(--sun-deep) 1.5px, transparent 1.6px);
+    background-size:22px 22px;
+  }
+  main{
+    position:relative;min-height:100%;
+    display:grid;place-items:center;
+    padding:48px 24px;
+  }
+  .stage{width:min(100%, 640px)}
+  .eyebrow{
+    font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-soft);
+    display:inline-flex;gap:8px;align-items:center;
+  }
+  .eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--tomato);animation:pulse 1.6s var(--ease-quart) infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.6);opacity:.5}}
+
+  h1{
+    margin-top:16px;
+    font-size:clamp(2.6rem, 9vw, 5rem);
+    line-height:.95;
+    font-weight:800;
+    letter-spacing:-.03em;
+    text-wrap:balance;
+  }
+  h1 em{font-style:normal;color:var(--tomato)}
+  .sub{
+    margin-top:24px;font-size:1.15rem;line-height:1.5;max-width:40ch;color:var(--ink-soft)
+  }
+  .actions{
+    margin-top:48px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;min-height:72px
+  }
+  button{font:inherit;cursor:pointer;border:none}
+  .btn{
+    min-height:60px;padding:0 32px;border-radius:999px;
+    font-size:1.25rem;font-weight:800;letter-spacing:-.01em;
+    border:3px solid var(--line);
+    box-shadow:0 5px 0 var(--line);
+    transition:transform .15s var(--ease-quart), box-shadow .15s var(--ease-quart), background-color .15s;
+  }
+  .btn:focus-visible{outline:3px solid var(--paper);outline-offset:4px}
+  .btn-yes{
+    background:var(--tomato);color:var(--paper);
+    transform-origin:left center;
+    transform:scale(var(--grow,1));
+    transition:transform .4s var(--ease-expo), box-shadow .15s, background-color .15s;
+  }
+  .btn-yes:hover{background:var(--tomato-press)}
+  .btn-yes:active{transform:scale(var(--grow,1)) translateY(4px);box-shadow:0 1px 0 var(--line)}
+  .btn-no{background:var(--paper);color:var(--ink);white-space:nowrap}
+  .btn-no.loose{
+    position:fixed;left:0;top:0;z-index:50;
+    transition:transform .45s var(--ease-expo);
+  }
+  .hint{
+    margin-top:24px;font-size:.9rem;color:var(--ink-soft);min-height:1.4em;
+    opacity:0;transform:translateY(6px);transition:opacity .3s, transform .3s var(--ease-expo)
+  }
+  .hint.show{opacity:1;transform:none}
+
+  /* step 2 */
+  .panel{display:none}
+  .panel.active{display:block;animation:rise .7s var(--ease-expo) both}
+  @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+
+  .ticket{
+    margin-top:40px;
+    background:var(--paper);
+    border:3px solid var(--line);
+    border-radius:24px;
+    box-shadow:0 8px 0 var(--line);
+    padding:32px;
+    display:grid;gap:24px;
+  }
+  .fields{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+  label{display:grid;gap:8px;font-size:.8rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+  input{
+    font:inherit;font-size:1.2rem;font-weight:600;color:var(--ink);
+    letter-spacing:0;text-transform:none;
+    background:oklch(95% 0.04 95);
+    border:2px solid var(--line);border-radius:14px;
+    min-height:56px;padding:0 16px;width:100%;
+  }
+  input:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+  input[aria-invalid="true"]{border-color:var(--tomato);background:oklch(94% 0.04 30)}
+  .error{font-size:.95rem;color:var(--tomato-press);font-weight:600;min-height:1.3em}
+  .quick{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    min-height:40px;padding:0 16px;border-radius:999px;
+    background:transparent;border:2px solid var(--line);color:var(--ink);
+    font-size:.95rem;font-weight:600;
+    transition:background-color .15s, color .15s
+  }
+  .chip:hover{background:var(--ink);color:var(--paper)}
+  .chip:focus-visible{outline:3px solid var(--tomato);outline-offset:2px}
+
+  /* step 3 */
+  .big-date{
+    margin-top:32px;
+    font-size:clamp(2rem, 7vw, 3.6rem);font-weight:800;line-height:1;letter-spacing:-.03em;
+    color:var(--tomato);
+    text-wrap:balance;
+  }
+  .row{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap}
+  .link{
+    background:none;border:none;color:var(--ink);font-weight:600;font-size:1rem;
+    text-decoration:underline;text-underline-offset:4px;min-height:44px
+  }
+
+  .confetti{position:fixed;inset:0;pointer-events:none;z-index:60;overflow:hidden}
+  .confetti i{
+    position:absolute;top:-20px;width:10px;height:16px;border-radius:2px;
+    animation:fall var(--d) var(--ease-quart) forwards;
+  }
+  @keyframes fall{to{transform:translate(var(--x), 110vh) rotate(var(--r))}}
+
+  @media (max-width:560px){
+    .fields{grid-template-columns:1fr}
+    .ticket{padding:24px}
+    .actions{margin-top:40px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+</style>
+</head>
+<body>
+<main>
+  <!-- STEP 1 -->
+  <section class="stage panel active" id="ask">
+    <span class="eyebrow"><span class="dot"></span>Pergunta séria (mais ou menos)</span>
+    <h1><span id="name"></span>quer sair <em>comigo?</em></h1>
+    <p class="sub">Pensa bem. Ou não pensa, só aperta o botão vermelho mesmo.</p>
+    <div class="actions">
+      <button class="btn btn-yes" id="yes">Sim!</button>
+      <button class="btn btn-no" id="no" aria-label="Não">Não</button>
+    </div>
+    <p class="hint" id="hint" aria-live="polite"></p>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="stage panel" id="pick">
+    <span class="eyebrow"><span class="dot"></span>Resposta certa, parabéns</span>
+    <h1>Então escolhe <em>quando.</em></h1>
+    <form class="ticket" id="form" novalidate>
+      <div class="fields">
+        <label>Dia
+          <input type="date" id="date" required>
+        </label>
+        <label>Hora
+          <input type="time" id="time" required value="20:00">
+        </label>
+      </div>
+      <div class="quick" aria-label="Atalhos">
+        <button type="button" class="chip" data-days="0">Hoje</button>
+        <button type="button" class="chip" data-days="1">Amanhã</button>
+        <button type="button" class="chip" data-weekend>Sábado</button>
+      </div>
+      <p class="error" id="err" aria-live="polite"></p>
+      <div><button type="submit" class="btn btn-yes">Fechado, tá marcado</button></div>
+    </form>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="stage panel" id="done">
+    <span class="eyebrow"><span class="dot"></span>Oficialmente marcado</span>
+    <h1>Te vejo <em>em breve.</em></h1>
+    <p class="big-date" id="summary"></p>
+    <p class="sub">Tira um print e manda pra mim. Sem volta agora.</p>
+    <div class="row">
+      <a class="btn btn-yes" id="wa" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">Mandar no WhatsApp</a>
+      <button class="link" id="back">Mudar a data</button>
+    </div>
+  </section>
+</main>
+<div class="confetti" id="confetti" aria-hidden="true"></div>
+
+<script>
+  // Personalize: seu-link.html?nome=Ana
+  const params = new URLSearchParams(location.search);
+  const nome = params.get('nome');
+  if (nome) document.getElementById('name').textContent = nome.trim() + ', ';
+  else document.getElementById('name').textContent = 'Você ';
+
+  const yes = document.getElementById('yes');
+  const no = document.getElementById('no');
+  const hint = document.getElementById('hint');
+
+  const lines = [
+    'Opa, escorregou.',
+    'Tenta de novo, vai.',
+    'Esse botão tá com medo de você.',
+    'Tem certeza? Ele não tem.',
+    'Nem o botão quer que você diga não.',
+    'Tá ficando cansativo, né?',
+    'O vermelho tá logo ali, ó.',
+    'Isso é um sinal do universo.',
+    'Eu tenho a noite toda.',
+    'Ok, agora é só teimosia.'
+  ];
+  const noLabels = ['Não','Hmm não','Tem certeza?','Pensa de novo','Não mesmo?','Última chance','Nãaao','Tá bom, sim?'];
+  let tries = 0;
+
+  function flee(e){
+    if (e) e.preventDefault();
+    tries++;
+    const r = no.getBoundingClientRect();
+    if (!no.classList.contains('loose')){
+      no.classList.add('loose');
+      no.style.transition = 'none';
+      no.style.transform = `translate(${r.left}px, ${r.top}px)`;
+      no.offsetHeight; // commit start position
+      no.style.transition = '';
+    }
+    no.textContent = noLabels[Math.min(tries, noLabels.length - 1)];
+    const w = no.offsetWidth, h = no.offsetHeight;
+    const pad = 16;
+    const maxX = innerWidth - w - pad, maxY = innerHeight - h - pad;
+    const yr = yes.getBoundingClientRect();
+    let x, y, guard = 0;
+    do {
+      x = pad + Math.random() * Math.max(0, maxX - pad);
+      y = pad + Math.random() * Math.max(0, maxY - pad);
+      guard++;
+    } while (guard < 30 && (
+      Math.hypot(x - r.left, y - r.top) < 160 ||
+      (x < yr.right + 20 && x + w > yr.left - 20 && y < yr.bottom + 20 && y + h > yr.top - 20)
+    ));
+    no.style.transform = `translate(${x}px, ${y}px) rotate(${(Math.random()*16-8).toFixed(1)}deg)`;
+    hint.textContent = lines[(tries - 1) % lines.length];
+    hint.classList.add('show');
+    yes.style.setProperty('--grow', Math.min(1 + tries * 0.06, 1.6));
+  }
+  no.addEventListener('mouseenter', flee);
+  no.addEventListener('pointerdown', flee);
+  no.addEventListener('touchstart', flee, {passive:false});
+  no.addEventListener('click', flee);
+  no.addEventListener('focus', () => flee());
+  addEventListener('resize', () => { if (no.classList.contains('loose')) flee(); tries = Math.max(0, tries - 1); });
+
+  // panels
+  function show(id){
+    document.querySelectorAll('.panel').forEach(p => p.classList.toggle('active', p.id === id));
+    no.style.display = id === 'ask' ? '' : 'none';
+  }
+
+  const dateIn = document.getElementById('date');
+  const timeIn = document.getElementById('time');
+  const err = document.getElementById('err');
+  const iso = d => new Date(d.getTime() - d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+  const today = new Date();
+  dateIn.min = iso(today);
+
+  yes.addEventListener('click', () => {
+    show('pick');
+    confetti(60);
+    setTimeout(() => dateIn.focus(), 400);
+  });
+
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+    const d = new Date();
+    if (c.dataset.weekend !== undefined){
+      const add = (6 - d.getDay() + 7) % 7 || 7;
+      d.setDate(d.getDate() + add);
+    } else d.setDate(d.getDate() + Number(c.dataset.days));
+    dateIn.value = iso(d);
+    dateIn.removeAttribute('aria-invalid'); err.textContent = '';
+  }));
+
+  const dias = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+  const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+  document.getElementById('form').addEventListener('submit', e => {
+    e.preventDefault();
+    [dateIn, timeIn].forEach(i => i.removeAttribute('aria-invalid'));
+    if (!dateIn.value){ dateIn.setAttribute('aria-invalid','true'); err.textContent = 'Faltou o dia. Não vale fugir agora.'; dateIn.focus(); return; }
+    if (!timeIn.value){ timeIn.setAttribute('aria-invalid','true'); err.textContent = 'Faltou a hora.'; timeIn.focus(); return; }
+    const [Y,M,D] = dateIn.value.split('-').map(Number);
+    const [hh,mm] = timeIn.value.split(':').map(Number);
+    const when = new Date(Y, M-1, D, hh, mm);
+    if (when < new Date()){ dateIn.setAttribute('aria-invalid','true'); err.textContent = 'Essa data já passou. Viagem no tempo fica pro segundo encontro.'; return; }
+    err.textContent = '';
+    const txt = `${dias[when.getDay()]}, ${D} de ${meses[M-1]} às ${String(hh).padStart(2,'0')}h${mm ? String(mm).padStart(2,'0') : ''}`;
+    document.getElementById('summary').textContent = txt.charAt(0).toUpperCase() + txt.slice(1);
+    document.getElementById('wa').href = 'https://wa.me/?text=' + encodeURIComponent(`Sim! Bora sair ${txt} 😄`);
+    show('done');
+    confetti(140);
+  });
+  document.getElementById('back').addEventListener('click', () => show('pick'));
+
+  function confetti(n){
+    const box = document.getElementById('confetti');
+    const colors = ['oklch(62% 0.21 32)','oklch(24% 0.05 40)','oklch(98% 0.02 95)','oklch(70% 0.15 150)'];
+    for (let i = 0; i < n; i++){
+      const p = document.createElement('i');
+      p.style.left = Math.random()*100 + 'vw';
+      p.style.background = colors[i % colors.length];
+      p.style.setProperty('--x', (Math.random()*200-100) + 'px');
+      p.style.setProperty('--r', (Math.random()*900-450) + 'deg');
+      p.style.setProperty('--d', (1.6 + Math.random()*1.6) + 's');
+      p.style.animationDelay = Math.random()*0.4 + 's';
+      box.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }
+  }
+</script>
+</body>
+</html>
